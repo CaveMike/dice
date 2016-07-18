@@ -57,6 +57,15 @@ class DiePerfect(DieBase):
         r = next(self.rolls)
         return r
 
+class TestDiePerfect(unittest.TestCase):
+    def test2d2(self):
+        die = DiePerfect(sides=2, num_dice=2)
+        self.assertEqual(die(count=8), [1, 1, 1, 2, 2, 1, 2, 2])
+
+    def test2d4(self):
+        die = DiePerfect(sides=4, num_dice=2)
+        self.assertEqual(die(count=32), [1, 1, 1, 2, 1, 3, 1, 4, 2, 1, 2, 2, 2, 3, 2, 4, 3, 1, 3, 2, 3, 3, 3, 4, 4, 1, 4, 2, 4, 3, 4, 4])
+
 class DieTester:
     def __init__(self, die):
         self.die = die
