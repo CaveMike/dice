@@ -137,9 +137,10 @@ class DieDivider(DieBase):
         if source.sides % sides != 0:
             raise Exception('Cannot divide a die from {} sides, to {} sides.'.format(source.sides, sides))
 
+        self.divisor = self.source.sides // self.sides
+
     def roll(self):
-        divisor = self.source.sides // self.sides
-        return math.ceil(self.source.roll() / divisor)
+        return math.ceil(self.source.roll() / self.divisor)
 
 class TestDieDivider(unittest.TestCase):
     def go(self, die):
@@ -158,7 +159,7 @@ class TestDieDivider(unittest.TestCase):
         self.go(die=DieDivider(sides=6, source=DiePerfect(sides=12)))
 
     def test_d9_from_d18(self):
-        self.go(die=DieDivider(sides=6, source=DiePerfect(sides=12)))
+        self.go(die=DieDivider(sides=9, source=DiePerfect(sides=18)))
 
 class DiePower(DieBase):
     def __init__(self, sides, source):
@@ -205,33 +206,33 @@ source die.
 """)
 
 class TestDiePower(unittest.TestCase):
-    def go(self, count, expected_rolls, die):
+    def go(self, count, max_rolls, die):
         tester = DieTester(die)
         tester(count=count)
         logging.info(tester.summary())
         self.assertFalse(tester.average_deviation)
-        self.assertEqual(die.source.num_rolls // die.source.num_dice, expected_rolls)
+        self.assertEqual(die.source.num_rolls // die.source.num_dice, max_rolls)
 
     def test_d16_from_2d6(self):
-        self.go(count=32, expected_rolls=68, die=DiePower(sides=16, source=DiePerfect(sides=6, num_dice=2)))
+        self.go(count=32, max_rolls=68, die=DiePower(sides=16, source=DiePerfect(sides=6, num_dice=2)))
 
     def test_d200_from_3d6(self):
-        self.go(count=400, expected_rolls=431, die=DiePower(sides=200, source=DiePerfect(sides=6, num_dice=3)))
+        self.go(count=400, max_rolls=431, die=DiePower(sides=200, source=DiePerfect(sides=6, num_dice=3)))
 
     def test_d80_from_2d10(self):
-        self.go(count=160, expected_rolls=198, die=DiePower(sides=80, source=DiePerfect(sides=10, num_dice=2)))
+        self.go(count=160, max_rolls=198, die=DiePower(sides=80, source=DiePerfect(sides=10, num_dice=2)))
 
     def test_d4000_from_4d8(self):
-        self.go(count=8000, expected_rolls=8191, die=DiePower(sides=4000, source=DiePerfect(sides=8, num_dice=4)))
+        self.go(count=8000, max_rolls=8191, die=DiePower(sides=4000, source=DiePerfect(sides=8, num_dice=4)))
 
     def test_d12_from_2d6(self):
-        self.go(count=144, expected_rolls=428, die=DiePower(sides=12, source=DiePerfect(sides=6, num_dice=2)))
+        self.go(count=144, max_rolls=428, die=DiePower(sides=12, source=DiePerfect(sides=6, num_dice=2)))
 
     def test_d50_from_2d10(self):
-        self.go(count=200, expected_rolls=395, die=DiePower(sides=50, source=DiePerfect(sides=10, num_dice=2)))
+        self.go(count=200, max_rolls=395, die=DiePower(sides=50, source=DiePerfect(sides=10, num_dice=2)))
 
     def test_d45_from_2d10(self):
-        self.go(count=180, expected_rolls=394, die=DiePower(sides=45, source=DiePerfect(sides=10, num_dice=2)))
+        self.go(count=180, max_rolls=394, die=DiePower(sides=45, source=DiePerfect(sides=10, num_dice=2)))
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(message)s')

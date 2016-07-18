@@ -216,7 +216,7 @@ class TestDieDivider(unittest.TestCase):
         self.go(die=DieDivider(sides=6, source=DiePerfect(sides=12)))
 
     def test_d9_from_d18(self):
-        self.go(die=DieDivider(sides=6, source=DiePerfect(sides=12)))
+        self.go(die=DieDivider(sides=9, source=DiePerfect(sides=18)))
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(message)s')
